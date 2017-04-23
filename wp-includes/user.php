@@ -1625,7 +1625,7 @@ function wp_insert_user( $userdata ) {
 	}
 
 	$compacted = compact( 'user_pass', 'user_email', 'user_url', 'user_nicename', 'display_name', 'user_registered' );
-	$data = wp_unslash( $compacted );
+	$data = apply_filters( 'wp_insert_user', wp_unslash( $compacted ), $update );
 
 	if ( $update ) {
 		if ( $user_email !== $old_user_data->user_email ) {
