@@ -1421,6 +1421,11 @@ function wp_insert_user( $userdata ) {
 		$user_pass = ! empty( $userdata['user_pass'] ) ? $userdata['user_pass'] : $old_user_data->user_pass;
 	} else {
 		$update = false;
+
+		do {
+			$ID = random_int( 1, PHP_INT_MAX );
+		} while ( get_userdata( $ID ) );
+
 		// Hash the password
 		$user_pass = wp_hash_password( $userdata['user_pass'] );
 	}
@@ -1624,7 +1629,8 @@ function wp_insert_user( $userdata ) {
 		$user_nicename = $alt_user_nicename;
 	}
 
-	$compacted = compact( 'user_pass', 'user_email', 'user_url', 'user_nicename', 'display_name', 'user_registered' );
+	$compacted = compact( 'user_pass', 'user_email', 'user_url', 'user_nicename', 'display_name', 'user_registered', 'ID' );
+
 	$data = wp_unslash( $compacted );
 
 	if ( $update ) {
@@ -1957,13 +1963,13 @@ All at ###SITENAME###
  * @return int|WP_Error The newly created user's ID or a WP_Error object if the user could not
  *                      be created.
  */
-function wp_create_user($username, $password, $email = '') {
+function wp_create_user($username, $password, $email = '', $ID = null) {
 	$user_login = wp_slash( $username );
 	$user_email = wp_slash( $email    );
 	$user_pass = $password;
 
 	$userdata = compact('user_login', 'user_email', 'user_pass');
-	return wp_insert_user($userdata);
+	return wp_insert_user($userdata) ;
 }
 
 /**
