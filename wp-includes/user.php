@@ -1625,7 +1625,34 @@ function wp_insert_user( $userdata ) {
 	}
 
 	$compacted = compact( 'user_pass', 'user_email', 'user_url', 'user_nicename', 'display_name', 'user_registered' );
-	$data = apply_filters( 'wp_insert_user', wp_unslash( $compacted ), $update );
+	$data = wp_unslash( $compacted );
+
+	if ( ! $update ) {
+		$data = $data + compact( 'user_login' );
+	}
+
+	/**
+	 * Filters user's data before the record is created or updated.
+	 *
+	 * It only includes data in Users table wp_user, not including any user metadata.
+	 *
+	 * @since 4.7.x
+	 *
+	 * @param array $data {
+	 *     Values and keys for the user.
+	 *
+	 *     @type string $user_login      The user's login. Only included if $update == false
+	 *     @type string $user_pass       The user's password.
+	 *     @type string $user_email      The user's email.
+	 *     @type string $user_url        The user's url.
+	 *     @type string $user_nicename   The user's nice name. Defaults to a URL-safe version of user's login
+	 *     @type string $display_name    The user's display name.
+	 *     @type string $user_registered MySQL timestamp describing the moment when the user registered. Defaults to
+	 *                                   the current UTC timestamp.
+	 * }
+	 * @param bool    $update Whether the user is being updated rather than created.
+	 */
+	$data = apply_filters( 'wp_insert_user', $data, $update );
 
 	if ( $update ) {
 		if ( $user_email !== $old_user_data->user_email ) {
@@ -1634,7 +1661,7 @@ function wp_insert_user( $userdata ) {
 		$wpdb->update( $wpdb->users, $data, compact( 'ID' ) );
 		$user_id = (int) $ID;
 	} else {
-		$wpdb->insert( $wpdb->users, $data + compact( 'user_login' ) );
+		$wpdb->insert( $wpdb->users, $data );
 		$user_id = (int) $wpdb->insert_id;
 	}
 
