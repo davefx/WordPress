@@ -1662,7 +1662,7 @@ function wp_insert_user( $userdata ) {
 	 * }
 	 * @param bool    $update Whether the user is being updated rather than created.
 	 */
-	$data = apply_filters( 'wp_insert_user', $data, $update );
+	$data = apply_filters( 'wp_pre_insert_user_data', $data, $update );
 
 	if ( $update ) {
 		if ( $user_email !== $old_user_data->user_email ) {
