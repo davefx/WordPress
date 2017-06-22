@@ -144,7 +144,7 @@ final class _WP_Editors {
 	 * @static
 	 * @param string $content The initial content of the editor.
 	 * @param string $editor_id ID for the textarea and TinyMCE and Quicktags instances (can contain only ASCII letters and numbers).
-	 * @param array $settings See the _parse_settings() method for description.
+	 * @param array $settings See _WP_Editors()::parse_settings() for description.
 	 */
 	public static function editor( $content, $editor_id, $settings = array() ) {
 		$set = self::parse_settings( $editor_id, $settings );
@@ -527,6 +527,13 @@ final class _WP_Editors {
 				$editor_styles = get_editor_stylesheets();
 
 				if ( ! empty( $editor_styles ) ) {
+					// Force urlencoding of commas.
+					foreach ( $editor_styles as $key => $url ) {
+						if ( strpos( $url, ',' ) !== false ) {
+							$editor_styles[ $key ] = str_replace( ',', '%2C', $url );
+						}
+					}
+
 					$mce_css .= ',' . implode( ',', $editor_styles );
 				}
 

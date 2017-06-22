@@ -2697,7 +2697,7 @@ Attachment = View.extend({
 	},
 
 	events: {
-		'click .js--select-attachment':   'toggleSelectionHandler',
+		'click':                          'toggleSelectionHandler',
 		'change [data-setting]':          'updateSetting',
 		'change [data-setting] input':    'updateSetting',
 		'change [data-setting] select':   'updateSetting',
@@ -5116,6 +5116,7 @@ ImageDetails = Select.extend({
 					style:    'primary',
 					text:     l10n.replace,
 					priority: 80,
+					requires: { selection: true },
 
 					click: function() {
 						var controller = this.controller,
