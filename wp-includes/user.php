@@ -1648,7 +1648,7 @@ function wp_insert_user( $userdata ) {
 	 *
 	 * @since 4.7.x
 	 *
-	 * @param array $data {
+	 * @param array    $data {
 	 *     Values and keys for the user.
 	 *
 	 *     @type string $user_login      The user's login. Only included if $update == false
@@ -1660,9 +1660,10 @@ function wp_insert_user( $userdata ) {
 	 *     @type string $user_registered MySQL timestamp describing the moment when the user registered. Defaults to
 	 *                                   the current UTC timestamp.
 	 * }
-	 * @param bool    $update Whether the user is being updated rather than created.
+	 * @param bool     $update Whether the user is being updated rather than created.
+	 * @param int|null $id     ID of the user to be updated, or NULL if the user is being created
 	 */
-	$data = apply_filters( 'wp_pre_insert_user_data', $data, $update );
+	$data = apply_filters( 'wp_pre_insert_user_data', $data, $update, $update ? (int) $ID : null );
 
 	if ( $update ) {
 		if ( $user_email !== $old_user_data->user_email ) {
