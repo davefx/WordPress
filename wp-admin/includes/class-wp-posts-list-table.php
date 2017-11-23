@@ -1111,19 +1111,19 @@ class WP_Posts_List_Table extends WP_List_Table {
 					$label = esc_html( sanitize_term_field( 'name', $t->name, $t->term_id, $taxonomy, 'display' ) );
 					$out[] = $this->get_edit_link( $posts_in_term_qv, $label );
 				}
-				/* translators: used between list items, there is a space after the comma */
-				$term_list_html = join( __( ', ' ), $out );
-
 	                        /**
 				 * Filters the html text including the list of terms for a taxonomy and post on the Posts list table.
 				 *
 				 * @since 4.9.1
 				 *
-				 * @param string $term_list_html The HTML for the term list corresponding to the taxonomy to display.
-				 * @param int    $post_id        The current post ID.
-				 * @param string $taxonomy       The taxonomy.
+				 * @param array  $out      An array of HTML formatted links to the terms corresponding to the taxonomy.
+				 * @param int    $post_id  The current post ID.
+				 * @param string $taxonomy The taxonomy.
 				 */
-				echo apply_filters( "admin_term_links-{$taxonomy}", $term_list_html, $post->ID, $taxonomy );
+				$term_list = apply_filters( "admin_term_links-{$taxonomy}", $out, $post->ID, $taxonomy );
+
+				/* translators: used between list items, there is a space after the comma */
+				echo join( __( ', ' ), $term_list );
 			} else {
 				echo '<span aria-hidden="true">&#8212;</span><span class="screen-reader-text">' . $taxonomy_object->labels->no_terms . '</span>';
 			}
